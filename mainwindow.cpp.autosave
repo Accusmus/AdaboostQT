@@ -36,4 +36,6 @@ void MainWindow::on_pushButton_create_data_clicked()
 
     double a = adb->find_alpha(0.3);
     qDebug() << "test alpha: " << a;
+    
+    
 }

@@ -20,6 +20,7 @@ public:
 
 
     void find_decision_stump(double &bestThresh, int &bestDirection, double &minError);
+    double find_alpha(double weightedErr);
 
 private:
     // Data

@@ -128,6 +128,10 @@ void adaboost::find_decision_stump(double &bestThresh, int &bestDirection, doubl
     }
 }
 
+double adaboost::find_alpha(double weightedErr){
+    return 0.5 * log((1 - weightedErr)/(weightedErr));
+}
+
 QString adaboost::get_data_as_string(){
     QString output;
     for(int i = 0; i < data_size; i++){
