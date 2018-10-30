@@ -23,7 +23,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    adaboost adb;
+    adaboost *adb;
 };
 
 #endif // MAINWINDOW_H

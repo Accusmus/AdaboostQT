@@ -2,24 +2,32 @@
 #define ADABOOST_H
 
 #include<QString>
+#include<QVector>
+#include<QDebug>
+#include<math.h>
 
 class adaboost
 {
 public:
-    adaboost();
+    adaboost(int dataset_size);
     ~adaboost();
-    void create_data(int dataset_size);
+    void create_data();
     QString get_data_as_string();
     QString get_weak_classifiers_as_string();
     QString get_alpha_values_as_string();
     QString get_weights_as_string();
     QString get_err_as_string();
 
+
+    void find_decision_stump(double &bestThresh, int &bestDirection, double &minError);
+
 private:
     // Data
     int *x;
     int *y;
     int *cls;
+
+    const int maxXY = 101;
 
     //number of boosting iterations
     int iterations;

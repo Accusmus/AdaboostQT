@@ -34,7 +34,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_size_dataset"/>
+        <widget class="QSpinBox" name="spinBox_size_dataset">
+         <property name="maximum">
+          <number>10000</number>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_create_data">
@@ -73,7 +77,7 @@
      <x>0</x>
      <y>0</y>
      <width>1035</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
