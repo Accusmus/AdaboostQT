@@ -268,7 +268,6 @@ double adaboost::test_training_set(){
         a[0] = x[i];
         a[1] = y[i];
         int res = classify_sample(a);
-        qDebug() << res << " " << cls[i];
         if(res == cls[i]){
             sum++;
         }

@@ -48,13 +48,25 @@ void MainWindow::on_pushButton_classify_clicked()
 {
     int x = ui->spinBox_sample_x->value();
     int y = ui->spinBox_sample_y->value();
+    int cls = ui->spinBox_class_sample->value();
 
     int a[2];
     a[0] = x;
     a[1] = y;
 
     int res = adb->classify_sample(a);
-    ui->lineEdit_result->setText(QString::number(res));
 
-    ui->lineEdit_result->setText(QString::number(adb->test_training_set()));
+    QString string;
+    if(cls == res){
+        string = "predicted: " + QString::number(res) + " actual: " + QString::number(cls) + " Correct Classification!";
+        ui->lineEdit_result->setText(string);
+    }else{
+        string = "predicted: " + QString::number(res) + " actual: " + QString::number(cls) + " incorrect Classification!";
+        ui->lineEdit_result->setText(string);
+    }
+}
+
+void MainWindow::on_pushButton_classify_training_clicked()
+{
+    ui->lineEdit_result_training->setText(QString::number(adb->test_training_set()));
 }
