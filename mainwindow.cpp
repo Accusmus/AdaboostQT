@@ -21,11 +21,11 @@ void MainWindow::on_pushButton_create_data_clicked()
 
     adb = new adaboost(dataset_size, boosing_rounds, maxXY);
 
-    adb->create_data();
+    adb->create_training_data();
 
     QString output;
     output = "Size of Dataset: " + QString::number(dataset_size) + "\nNumber of boosing rounds: " + QString::number(boosing_rounds) + "\nMax x and y: " + QString::number(maxXY) + "\n";
-    output += adb->get_data_as_string();
+    output += adb->get_training_data_as_string();
     ui->textEdit_data->setText(output);
 }
 
@@ -69,4 +69,21 @@ void MainWindow::on_pushButton_classify_clicked()
 void MainWindow::on_pushButton_classify_training_clicked()
 {
     ui->lineEdit_result_training->setText(QString::number(adb->test_training_set()));
+}
+
+void MainWindow::on_pushButton_generate_test_clicked()
+{
+    int testDataSize = ui->spinBox_sample_test->value();
+
+    adb->create_test_data(testDataSize);
+    QString output = adb->get_test_data_as_string();
+
+    ui->textEdit_test_data->setText(output);
+}
+
+void MainWindow::on_pushButton_classify_test_clicked()
+{
+    double result = adb->test_test_set();
+
+    ui->textEdit_test_result->setText(QString::number(result));
 }

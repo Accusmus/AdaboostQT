@@ -23,8 +23,6 @@ adaboost::adaboost(int dataset_size, int boosing_rounds, int max):
         alpha[i] = 0.0;
     }
 
-
-
     double weight_val = 1.0 / double(data_size);
     weights = new float[data_size];
     for(int i = 0; i < data_size; i++){
@@ -47,20 +45,39 @@ adaboost::~adaboost(){
     free(weights);
 }
 
-void adaboost::create_data(){
-    x = new int[data_size];
-    y = new int[data_size];
-    cls = new int[data_size];
+void adaboost::create_training_data(){
+    x_train = new int[data_size];
+    y_train = new int[data_size];
+    cls_train = new int[data_size];
 
     for(int i = 0; i < data_size; i++){
-        x[i] = rand() % maxXY;
-        y[i] = rand() % maxXY;
+        x_train[i] = rand() % maxXY;
+        y_train[i] = rand() % maxXY;
 
-        int d = sqrt(double(pow(((maxXY/2)-x[i]), 2) + pow(((maxXY/2) - y[i]), 2)));
+        int d = sqrt(double(pow(((maxXY/2)-x_train[i]), 2) + pow(((maxXY/2) - y_train[i]), 2)));
         if(abs(d) > (maxXY/3)){
-            cls[i] = -1;
+            cls_train[i] = -1;
         }else{
-            cls[i] = 1;
+            cls_train[i] = 1;
+        }
+    }
+}
+
+void adaboost::create_test_data(int testSize){
+    test_data_size = testSize;
+    x_test = new int[testSize];
+    y_test = new int[testSize];
+    cls_test = new int[testSize];
+
+    for(int i = 0; i < test_data_size; i++){
+        x_test[i] = rand() % maxXY;
+        y_test[i] = rand() % maxXY;
+
+        int d = sqrt(double(pow(((maxXY/2)-x_test[i]),2) + pow(((maxXY/2)-y_test[i]),2)));
+        if(abs(d) > (maxXY/3)){
+            cls_test[i] = -1;
+        }else{
+            cls_test[i] = 1;
         }
     }
 }
@@ -78,9 +95,9 @@ void adaboost::train_adaboost(){
             double minError = 0.0;
 
             if(feature == 0){
-                find_decision_stump(x,bestThresh, bestDirection, minError);
+                find_decision_stump(x_train,bestThresh, bestDirection, minError);
             }else{
-                find_decision_stump(y,bestThresh, bestDirection, minError);
+                find_decision_stump(y_train,bestThresh, bestDirection, minError);
             }
 
 
@@ -96,16 +113,98 @@ void adaboost::train_adaboost(){
 
 
         if(weak_classifiers[t][1] == 0){
-            classify_against_weak_classifier(x, weak_classifiers[t][0], weak_classifiers[t][2], classification);
+            classify_against_weak_classifier(x_train, weak_classifiers[t][0], weak_classifiers[t][2], classification);
         }else{
-            classify_against_weak_classifier(y, weak_classifiers[t][0], weak_classifiers[t][2], classification);
+            classify_against_weak_classifier(y_train, weak_classifiers[t][0], weak_classifiers[t][2], classification);
         }
 
-        update_weights(alpha[t], classification, cls);
+        update_weights(alpha[t], classification, cls_train);
 
         normalise_weights();
 
     }
+}
+
+
+int adaboost::classify_sample(int *sample){
+    double sum = 0;
+
+    for(int i = 0; i < iterations; i++){
+        double thresh = weak_classifiers[i][0];
+        int feat = weak_classifiers[i][1];
+        int direction = weak_classifiers[i][2];
+        double alp = alpha[i];
+
+        int ht = sample[feat] - thresh;
+        int sign_res= 0;
+
+        if(ht >0 ){
+            sign_res = 1 * direction;
+        }else{
+            sign_res = -1 * direction;
+        }
+
+        sum += alp * sign_res;
+    }
+    if(sum >= 0){
+        return 1; // inside
+    }else{
+        return -1; // outside
+    }
+}
+
+double adaboost::test_training_set(){
+    int sum = 0;
+    for(int i = 0; i < data_size; i++){
+        int a[2];
+        a[0] = x_train[i];
+        a[1] = y_train[i];
+        int res = classify_sample(a);
+        if(res == cls_train[i]){
+            sum++;
+        }
+    }
+
+    return (double(sum)/double(data_size))*100.0;
+}
+
+double adaboost::test_test_set(){
+    int sum = 0;
+    for(int i = 0; i < test_data_size; i++){
+        int a[2];
+        a[0] = x_test[i];
+        a[1] = y_test[i];
+        int res = classify_sample(a);
+        if(res == cls_test[i]){
+            sum++;
+        }
+    }
+
+    return (double(sum)/double(test_data_size))*100.0;
+}
+
+void adaboost::write_classifier_to_file(QString filename){
+    filename = "../classifier/" + filename;
+
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        qDebug() << "Unable to Write to file!";
+        return;
+    }
+
+    QTextStream out(&file);
+
+
+    for(int i = 0; i < iterations; i++){
+        out << weak_classifiers[i][0];
+    }
+
+    file.close();
+
+}
+
+void adaboost::read_classifier_from_file(QString filename){
+
 }
 
 int max(const int* arr, int size){
@@ -171,7 +270,7 @@ void adaboost::find_decision_stump(const int* arr, double &bestThresh, int &best
             }
 
             for(int i = 0; i < data_size; i++){
-                if(actual[i] == cls[i]){
+                if(actual[i] == cls_train[i]){
                     correct[i] = 0; //correct
                 }else{
                     correct[i] = 1; //incorrect
@@ -234,52 +333,18 @@ void adaboost::classify_against_weak_classifier(const int *x, double threshold,i
     }
 }
 
-int adaboost::classify_sample(int *sample){
-    double sum = 0;
-
-    for(int i = 0; i < iterations; i++){
-        double thresh = weak_classifiers[i][0];
-        int feat = weak_classifiers[i][1];
-        int direction = weak_classifiers[i][2];
-        double alp = alpha[i];
-
-        int ht = sample[feat] - thresh;
-        int sign_res= 0;
-
-        if(ht >0 ){
-            sign_res = 1 * direction;
-        }else{
-            sign_res = -1 * direction;
-        }
-
-        sum += alp * sign_res;
-    }
-    if(sum >= 0){
-        return 1; // inside
-    }else{
-        return -1; // outside
-    }
-}
-
-double adaboost::test_training_set(){
-    int sum = 0;
-    for(int i = 0; i < data_size; i++){
-        int a[2];
-        a[0] = x[i];
-        a[1] = y[i];
-        int res = classify_sample(a);
-        if(res == cls[i]){
-            sum++;
-        }
-    }
-
-    return (double(sum)/double(data_size))*100.0;
-}
-
-QString adaboost::get_data_as_string(){
+QString adaboost::get_training_data_as_string(){
     QString output;
     for(int i = 0; i < data_size; i++){
-        output += "x: " + QString::number(x[i]) + " y: " + QString::number(y[i]) + " cls: " + QString::number(cls[i]) + "\n";
+        output += "x: " + QString::number(x_train[i]) + " y: " + QString::number(y_train[i]) + " cls: " + QString::number(cls_train[i]) + "\n";
+    }
+    return output;
+}
+
+QString adaboost::get_test_data_as_string(){
+    QString output;
+    for(int i = 0; i < data_size; i++){
+        output += "x: " + QString::number(x_test[i]) + " y: " + QString::number(y_test[i]) + " cls: " + QString::number(cls_test[i]) + "\n";
     }
     return output;
 }

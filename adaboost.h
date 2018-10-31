@@ -5,14 +5,20 @@
 #include<QVector>
 #include<QDebug>
 #include<math.h>
+#include<QFile>
+#include<QTextStream>
 
 class adaboost
 {
 public:
     adaboost(int dataset_size, int boosing_rounds, int max);
     ~adaboost();
-    void create_data();
-    QString get_data_as_string();
+
+    void create_training_data();
+    void create_test_data(int testSize);
+
+    QString get_training_data_as_string();
+    QString get_test_data_as_string();
     QString get_weak_classifiers_as_string();
     QString get_alpha_values_as_string();
     QString get_weights_as_string();
@@ -21,13 +27,22 @@ public:
     void train_adaboost();
     int classify_sample(int *sample);
     double test_training_set();
+    double test_test_set();
+    void write_classifier_to_file(QString filename);
+    void read_classifier_from_file(QString filename);
 
 
 private:
-    // Data
-    int *x;
-    int *y;
-    int *cls;
+    // Training Data
+    int *x_train;
+    int *y_train;
+    int *cls_train;
+
+    // Testing Data
+    int *x_test;
+    int *y_test;
+    int *cls_test;
+    int test_data_size;
 
     const int maxXY;
 
@@ -52,7 +67,7 @@ private:
     double find_alpha(double weightedErr);
     void update_weights(double alpha, int *classification, int *label);
     void normalise_weights();
-    void classify_against_weak_classifier(const int *x, double threshold,int direction, int *classifications);
+    void classify_against_weak_classifier(const int *x_train, double threshold,int direction, int *classifications);
 
 };
 

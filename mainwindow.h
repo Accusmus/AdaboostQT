@@ -27,6 +27,10 @@ private slots:
 
     void on_pushButton_classify_training_clicked();
 
+    void on_pushButton_generate_test_clicked();
+
+    void on_pushButton_classify_test_clicked();
+
 private:
     Ui::MainWindow *ui;
     adaboost *adb;

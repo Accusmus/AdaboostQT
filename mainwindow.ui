@@ -394,24 +394,31 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spinBox"/>
+            <widget class="QSpinBox" name="spinBox_sample_test">
+             <property name="maximum">
+              <number>100000</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+            </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="pushButton_generate_test">
              <property name="text">
               <string>Generate Test Data</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QTextEdit" name="textEdit"/>
+            <widget class="QTextEdit" name="textEdit_test_data"/>
            </item>
           </layout>
          </item>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="pushButton_classify_test">
              <property name="text">
               <string>Classify Test Data</string>
              </property>
@@ -425,7 +432,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QTextEdit" name="textEdit_2"/>
+            <widget class="QTextEdit" name="textEdit_test_result"/>
            </item>
           </layout>
          </item>
