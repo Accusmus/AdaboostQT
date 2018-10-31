@@ -18,9 +18,8 @@ public:
     QString get_weights_as_string();
     QString get_err_as_string();
 
+    void train_adaboost();
 
-    void find_decision_stump(double &bestThresh, int &bestDirection, double &minError);
-    double find_alpha(double weightedErr);
 
 private:
     // Data
@@ -28,7 +27,7 @@ private:
     int *y;
     int *cls;
 
-    const int maxXY = 101;
+    const int maxXY = 100;
 
     //number of boosting iterations
     int iterations;
@@ -46,6 +45,12 @@ private:
     float *weights;
     //weighted error per boosting iteration
     float *weighted_err;
+
+    void find_decision_stump(const int *arr, double &bestThresh, int &bestDirection, double &minError);
+    double find_alpha(double weightedErr);
+    void update_weights(double alpha, int *classification, int *label);
+    void normalise_weights();
+    void classify_against_weak_classifier(const int *x, double threshold,int direction, int *classifications);
 
 };
 
