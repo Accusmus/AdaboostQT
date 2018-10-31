@@ -184,27 +184,51 @@ double adaboost::test_test_set(){
 }
 
 void adaboost::write_classifier_to_file(QString filename){
-    filename = "../classifier/" + filename;
+    filename = "../data/" + filename;
 
     QFile file(filename);
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
-        qDebug() << "Unable to Write to file!";
+    if (!file.open(QIODevice::WriteOnly| QIODevice::Text)) {
+        qDebug() << "Unable to Write to file!" + filename;
         return;
     }
 
     QTextStream out(&file);
 
-
+    out << iterations << "\n";
     for(int i = 0; i < iterations; i++){
-        out << weak_classifiers[i][0];
+        out << weak_classifiers[i][0] << " " << weak_classifiers[i][1] << " " << weak_classifiers[i][2] << " " << alpha[i] << "\n";
     }
-
     file.close();
 
+    qDebug() << "File Written Successfully";
 }
 
 void adaboost::read_classifier_from_file(QString filename){
+    filename = "../data/" + filename;
 
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly| QIODevice::Text)) {
+        qDebug() << "Unable to Read from file!" + filename;
+        return;
+    }
+
+    QTextStream in(&file);
+    QString line;
+
+    int count = 0;
+    while(!in.atEnd()){
+        line = in.readLine();
+        if(count == 0){
+            iterations  = line.toInt();
+            qDebug() << iterations;
+        }else{
+            weak_classifiers[count-1][0] = line.split(" ")[0].toDouble();
+            weak_classifiers[count-1][1] = line.split(" ")[1].toDouble();
+            weak_classifiers[count-1][2] = line.split(" ")[2].toDouble();
+            alpha[count-1] = line.split(" ")[3].toDouble();
+        }
+        count++;
+    }
 }
 
 int max(const int* arr, int size){

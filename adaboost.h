@@ -47,7 +47,7 @@ private:
     const int maxXY;
 
     //number of boosting iterations
-    const int iterations;
+    int iterations;
     //size of the data set
     const int data_size;
     //number of dimentions of the data set

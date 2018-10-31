@@ -34,7 +34,7 @@ void MainWindow::on_pushButton_train_clicked()
     if(adb == NULL){
         QString output = "Error please create data first!";
         qDebug() << output;
-        ui->textEdit_classifiers->setText(output);
+        ui->textEdit_messages->setText(output);
         return;
     }
 
@@ -46,6 +46,11 @@ void MainWindow::on_pushButton_train_clicked()
 
 void MainWindow::on_pushButton_classify_clicked()
 {
+    if(adb == NULL){
+        ui->textEdit_messages->setText("Please initialise Adaboost first!");
+        return;
+    }
+
     int x = ui->spinBox_sample_x->value();
     int y = ui->spinBox_sample_y->value();
     int cls = ui->spinBox_class_sample->value();
@@ -68,13 +73,20 @@ void MainWindow::on_pushButton_classify_clicked()
 
 void MainWindow::on_pushButton_classify_training_clicked()
 {
-    ui->lineEdit_result_training->setText(QString::number(adb->test_training_set()));
+    if(adb == NULL){
+        ui->textEdit_messages->setText("Please initialise Adaboost first!");
+        return;
+    }
+    ui->lineEdit_result_training->setText(QString::number(adb->test_training_set()) + "%");
 }
 
 void MainWindow::on_pushButton_generate_test_clicked()
 {
     int testDataSize = ui->spinBox_sample_test->value();
-
+    if(adb == NULL){
+        ui->textEdit_messages->setText("Please initialise Adaboost first!");
+        return;
+    }
     adb->create_test_data(testDataSize);
     QString output = adb->get_test_data_as_string();
 
@@ -83,7 +95,34 @@ void MainWindow::on_pushButton_generate_test_clicked()
 
 void MainWindow::on_pushButton_classify_test_clicked()
 {
+    if(adb == NULL){
+        ui->textEdit_messages->setText("Please initialise Adaboost first!");
+        return;
+    }
+
     double result = adb->test_test_set();
 
-    ui->textEdit_test_result->setText(QString::number(result));
+    ui->textEdit_test_result->setText(QString::number(result)+ "%");
+}
+
+void MainWindow::on_pushButton_write_classifier_clicked()
+{
+    QString filename = ui->lineEdit_filename->text();
+
+    if(adb != NULL){
+        adb->write_classifier_to_file(filename);
+    }else{
+        ui->textEdit_messages->setText("Please initialise Adaboost by pressing Create dataset");
+    }
+}
+
+void MainWindow::on_pushButton_read_classifer_clicked()
+{
+    QString filename = ui->lineEdit_filename->text();
+
+    if(adb != NULL){
+        adb->read_classifier_from_file(filename);
+    }else{
+        ui->textEdit_messages->setText("Please initialise Adaboost by pressing Create dataset");
+    }
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1035</width>
-    <height>606</height>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -142,6 +142,37 @@
           <widget class="QTextEdit" name="textEdit_classifiers"/>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>Store Classifer:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_filename">
+         <property name="text">
+          <string>classifier.txt</string>
+         </property>
+         <property name="placeholderText">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_write_classifier">
+         <property name="text">
+          <string>Write Adaboost Classifier to File</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_read_classifer">
+         <property name="text">
+          <string>Read Adaboost Classifier from File</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -439,30 +470,14 @@
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>Messages:</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        <widget class="QTextEdit" name="textEdit_messages"/>
        </item>
       </layout>
      </item>
