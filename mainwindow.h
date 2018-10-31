@@ -21,6 +21,8 @@ public:
 private slots:
     void on_pushButton_create_data_clicked();
 
+    void on_pushButton_train_clicked();
+
 private:
     Ui::MainWindow *ui;
     adaboost *adb;

@@ -9,7 +9,7 @@
 class adaboost
 {
 public:
-    adaboost(int dataset_size);
+    adaboost(int dataset_size, int boosing_rounds, int max);
     ~adaboost();
     void create_data();
     QString get_data_as_string();
@@ -27,12 +27,12 @@ private:
     int *y;
     int *cls;
 
-    const int maxXY = 100;
+    const int maxXY;
 
     //number of boosting iterations
-    int iterations;
+    const int iterations;
     //size of the data set
-    int data_size;
+    const int data_size;
     //number of dimentions of the data set
     int dimensions;
 

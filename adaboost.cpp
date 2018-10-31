@@ -2,12 +2,10 @@
 
 using namespace std;
 
-adaboost::adaboost(int dataset_size)
+adaboost::adaboost(int dataset_size, int boosing_rounds, int max):data_size(dataset_size),iterations(boosing_rounds), maxXY(max)
 {
-    data_size = dataset_size;
 
     dimensions = 2; // x and y
-    iterations = 30;
 
     weak_classifiers = new float*[iterations];
     alpha = new float[iterations];
@@ -104,10 +102,6 @@ void adaboost::train_adaboost(){
 
         normalise_weights();
 
-    }
-
-    for(int i = 0; i < data_size; i++){
-        qDebug() << classification[i];
     }
 }
 
