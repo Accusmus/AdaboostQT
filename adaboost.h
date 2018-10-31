@@ -19,6 +19,8 @@ public:
     QString get_err_as_string();
 
     void train_adaboost();
+    int classify_sample(int *sample);
+    double test_training_set();
 
 
 private:

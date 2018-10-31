@@ -23,6 +23,8 @@ private slots:
 
     void on_pushButton_train_clicked();
 
+    void on_pushButton_classify_clicked();
+
 private:
     Ui::MainWindow *ui;
     adaboost *adb;

@@ -43,3 +43,18 @@ void MainWindow::on_pushButton_train_clicked()
     output = adb->get_weak_classifiers_as_string();
     ui->textEdit_classifiers->setText(output);
 }
+
+void MainWindow::on_pushButton_classify_clicked()
+{
+    int x = ui->spinBox_sample_x->value();
+    int y = ui->spinBox_sample_y->value();
+
+    int a[2];
+    a[0] = x;
+    a[1] = y;
+
+    int res = adb->classify_sample(a);
+    ui->lineEdit_result->setText(QString::number(res));
+
+    ui->lineEdit_result->setText(QString::number(adb->test_training_set()));
+}

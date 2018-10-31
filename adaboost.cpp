@@ -2,7 +2,10 @@
 
 using namespace std;
 
-adaboost::adaboost(int dataset_size, int boosing_rounds, int max):data_size(dataset_size),iterations(boosing_rounds), maxXY(max)
+adaboost::adaboost(int dataset_size, int boosing_rounds, int max):
+    data_size(dataset_size),
+    iterations(boosing_rounds),
+    maxXY(max)
 {
 
     dimensions = 2; // x and y
@@ -229,6 +232,49 @@ void adaboost::classify_against_weak_classifier(const int *x, double threshold,i
             }
         }
     }
+}
+
+int adaboost::classify_sample(int *sample){
+    double sum = 0;
+
+    for(int i = 0; i < iterations; i++){
+        double thresh = weak_classifiers[i][0];
+        int feat = weak_classifiers[i][1];
+        int direction = weak_classifiers[i][2];
+        double alp = alpha[i];
+
+        int ht = sample[feat] - thresh;
+        int sign_res= 0;
+
+        if(ht >0 ){
+            sign_res = 1 * direction;
+        }else{
+            sign_res = -1 * direction;
+        }
+
+        sum += alp * sign_res;
+    }
+    if(sum >= 0){
+        return 1; // inside
+    }else{
+        return -1; // outside
+    }
+}
+
+double adaboost::test_training_set(){
+    int sum = 0;
+    for(int i = 0; i < data_size; i++){
+        int a[2];
+        a[0] = x[i];
+        a[1] = y[i];
+        int res = classify_sample(a);
+        qDebug() << res << " " << cls[i];
+        if(res == cls[i]){
+            sum++;
+        }
+    }
+
+    return (double(sum)/double(data_size))*100.0;
 }
 
 QString adaboost::get_data_as_string(){
